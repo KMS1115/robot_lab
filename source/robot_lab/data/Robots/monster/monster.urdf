@@ -1,0 +1,538 @@
+<?xml version="1.0"?>
+<robot name="monster">
+
+    <material name="silver">
+        <color rgba="0.700 0.700 0.700 1.000"/>
+    </material>
+
+    <material name="white">
+        <color rgba="0.9 0.9 0.9 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.1490 0.7019 0.9420 1"/>
+    </material>
+
+    <link name="king">
+        <visual>
+            <geometry>
+                <box size="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <joint name="king" type="fixed">
+        <parent link="king"/>
+        <child link="base"/>
+        <origin xyz="0 0 0"/>
+    </joint>
+
+<!--  back base  -->
+    <link name="base">
+        <visual>
+            <origin xyz="0.165 -0 -0" rpy="0 0 3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Body.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0.05 0 -0.024" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.401 0.27 0.132"/>
+<!--                <box size="0.541 0.27 0.15"/>-->
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="16.0"/>
+            <origin xyz="0.0 0 -0.0"/>
+            <inertia ixx="0.1845" iyy="0.4211" izz="0.5592"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+<!--  front base  -->
+    <link name="base_second">
+        <collision>
+            <origin xyz="0.05 0 -0.024" rpy="0 0 0"/>
+            <geometry>
+                 <box size="0.152 0.515 0.132"/>
+<!--                <box size="0.292 0.515 0.15"/>-->
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.0"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+
+    <joint name="base" type="fixed">
+        <parent link="base"/>
+        <child link="base_second"/>
+            <origin xyz="0.2765 0 0" rpy="0 0 0"/>
+<!--        <origin xyz="0.4165 0 0" rpy="0 0 0"/>-->
+    </joint>
+
+    <!--    FL     -->
+    <link name="hip_roll_motor_FL">
+        <visual>
+            <origin xyz="0.07 0.02 0.01" rpy="0 1.57 0"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_pelvis.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.8"/>
+            <origin xyz="0.0 0.0 0.0"/>
+            <inertia ixx="0.00033" iyy="0.00113" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="first_link_FL">
+        <visual>
+            <origin xyz ="-0.0 0.025 -0.225" rpy="1.57 0 3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_thigh.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.01 -0.13" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.26"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.2"/>
+            <origin xyz="0 0.0 0.0"/>
+            <inertia ixx="0.00687" iyy="0.00687" izz="0.00022"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="second_link_FL">
+        <visual>
+            <origin xyz="0.0 0.02 -0.265" rpy="1.57 0 3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_calf.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.035 -0.185" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.37"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.9"/>
+            <origin xyz="0 0.0 -0.0"/>
+            <inertia ixx="0.01035" iyy="0.01035" izz="0.00016"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="wheel_FL">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.05"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.7"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.00113" iyy="0.00197" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <!--    joint    -->
+    <joint name="hip_roll_joint_FL" type="revolute">
+        <parent link="base"/>
+        <child link="hip_roll_motor_FL"/>
+        <origin xyz="0.2765 0.196 0.0" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="hip_pitch_joint_FL" type="revolute">
+        <parent link="hip_roll_motor_FL"/>
+        <child link="first_link_FL"/>
+        <origin xyz="0.07 0.0893 0.005" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="knee_pitch_joint_FL" type="revolute">
+        <parent link="first_link_FL"/>
+        <child link="second_link_FL"/>
+        <origin xyz="0.0 0.05 -0.26" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="140" velocity="20"/>
+    </joint>
+
+    <joint name="wheel_joint_FL" type="continuous">
+        <parent link="second_link_FL"/>
+        <child link="wheel_FL"/>
+        <origin xyz="0.0 -0.015 -0.37" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="60" velocity="80"/>
+        <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+
+
+    <!--    FR     -->
+    <link name="hip_roll_motor_FR">
+        <visual>
+            <origin xyz="0.07 -0.02 0.01" rpy="0 -1.57 3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_pelvis.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.8"/>
+            <origin xyz="0.0 0.0 0.0"/>
+            <inertia ixx="0.00033" iyy="0.00113" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="first_link_FR">
+        <visual>
+            <origin xyz ="-0.0 -0.025 -0.225" rpy="1.57 0 0"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_thigh.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.01 -0.13" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.26"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.2"/>
+            <origin xyz="0 0.00 -0.0"/>
+            <inertia ixx="0.00687" iyy="0.00687" izz="0.00022"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="second_link_FR">
+        <visual>
+            <origin xyz="0.0 -0.02 -0.265" rpy="1.57 0 0"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_calf.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.035 -0.185" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.37"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.9"/>
+            <origin xyz="0 0.0 -0.0"/>
+            <inertia ixx="0.01035" iyy="0.01035" izz="0.00016"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="wheel_FR">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.05"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.7"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.00113" iyy="0.00197" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <!--    joint    -->
+    <joint name="hip_roll_joint_FR" type="revolute">
+        <parent link="base"/>
+        <child link="hip_roll_motor_FR"/>
+        <origin xyz="0.2765 -0.196 0.00" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="hip_pitch_joint_FR" type="revolute">
+        <parent link="hip_roll_motor_FR"/>
+        <child link="first_link_FR"/>
+        <origin xyz="0.07 -0.0893 0.01" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="knee_pitch_joint_FR" type="revolute">
+        <parent link="first_link_FR"/>
+        <child link="second_link_FR"/>
+        <origin xyz="0.0 -0.05 -0.26" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="140" velocity="20"/>
+    </joint>
+
+    <joint name="wheel_joint_FR" type="continuous">
+        <parent link="second_link_FR"/>
+        <child link="wheel_FR"/>
+        <origin xyz="0.0 0.015 -0.37" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="60" velocity="80"/>
+        <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+
+    <!--    HL     -->
+    <link name="hip_roll_motor_HL">
+        <visual>
+            <origin xyz="-0.04 0.02 0.01" rpy="0 -1.57 0"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_pelvis.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.8"/>
+            <origin xyz="0.0 0.0 0.0"/>
+            <inertia ixx="0.00033" iyy="0.00113" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="first_link_HL">
+        <visual>
+            <origin xyz ="0. 0.025 -0.21" rpy="1.57 0 3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_thigh.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.01 -0.13" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.26"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.2"/>
+            <origin xyz="0 0.0 -0.0"/>
+            <inertia ixx="0.00687" iyy="0.00687" izz="0.00022"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="second_link_HL">
+        <visual>
+            <origin xyz="0.0 0.02 -0.265" rpy="1.57 0 3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_calf.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.035 -0.185" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.37"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.9"/>
+            <origin xyz="0 0.0 -0.0"/>
+            <inertia ixx="0.01035" iyy="0.01035" izz="0.00016"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="wheel_HL">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.05"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.7"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.00113" iyy="0.00197" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <!--    joint    -->
+    <joint name="hip_roll_joint_HL" type="revolute">
+        <parent link="base"/>
+        <child link="hip_roll_motor_HL"/>
+        <origin xyz="-0.04275 0.08 0.0" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="hip_pitch_joint_HL" type="revolute">
+        <parent link="hip_roll_motor_HL"/>
+        <child link="first_link_HL"/>
+        <origin xyz="-0.031 0.0893 0.005" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="knee_pitch_joint_HL" type="revolute">
+        <parent link="first_link_HL"/>
+        <child link="second_link_HL"/>
+        <origin xyz="0.0 0.05 -0.26" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="140" velocity="20"/>
+    </joint>
+
+    <joint name="wheel_joint_HL" type="continuous">
+        <parent link="second_link_HL"/>
+        <child link="wheel_HL"/>
+        <origin xyz="0.0 -0.015 -0.37" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="60" velocity="80"/>
+        <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+
+    <!--    HR     -->
+
+    <link name="hip_roll_motor_HR">
+        <visual>
+            <origin xyz="-0.04 -0.02 0.01" rpy="0 1.57 -3.14"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_pelvis.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.8"/>
+            <origin xyz="0.0 0.0 0.0"/>
+            <inertia ixx="0.00033" iyy="0.00113" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="first_link_HR">
+        <visual>
+            <origin xyz ="0. -0.025 -0.21" rpy="1.57 0 0"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_thigh.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.01 -0.13" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.26"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.2"/>
+            <origin xyz="0 0.0 -0.0"/>
+            <inertia ixx="0.00687" iyy="0.00687" izz="0.00022"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="second_link_HR">
+        <visual>
+            <origin xyz="0.0 -0.02 -0.265" rpy="1.57 0 0"/>
+            <geometry>
+                <mesh filename="meshes/WeMO_Leg_calf.dae" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.035 -0.185" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.019" length="0.37"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.9"/>
+            <origin xyz="0 0.0 -0.0"/>
+            <inertia ixx="0.01035" iyy="0.01035" izz="0.00016"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <link name="wheel_HR">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.57 0 0"/>
+            <geometry>
+                <cylinder radius="0.075" length="0.05"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.7"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.00113" iyy="0.00197" izz="0.00113"
+                     ixy="0.0" ixz="0.0" iyz="0.0"/>
+        </inertial>
+    </link>
+
+    <!--    joint    -->
+    <joint name="hip_roll_joint_HR" type="revolute">
+        <parent link="base"/>
+        <child link="hip_roll_motor_HR"/>
+        <origin xyz="-0.04275 -0.08 0.0" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="hip_pitch_joint_HR" type="revolute">
+        <parent link="hip_roll_motor_HR"/>
+        <child link="first_link_HR"/>
+        <origin xyz="-0.031 -0.0893 0.005" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="120" velocity="20"/>
+    </joint>
+
+    <joint name="knee_pitch_joint_HR" type="revolute">
+        <parent link="first_link_HR"/>
+        <child link="second_link_HR"/>
+        <origin xyz="0.0 -0.05 -0.26" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.1416" upper="3.1416" effort="140" velocity="20"/>
+    </joint>
+
+    <joint name="wheel_joint_HR" type="continuous">
+        <parent link="second_link_HR"/>
+        <child link="wheel_HR"/>
+        <origin xyz="0.0 0.015 -0.37" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="60" velocity="80"/>
+        <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+
+
+</robot>
