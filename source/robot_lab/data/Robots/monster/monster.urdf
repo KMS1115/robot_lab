@@ -17,20 +17,6 @@
         <color rgba="0.1490 0.7019 0.9420 1"/>
     </material>
 
-    <link name="king">
-        <visual>
-            <geometry>
-                <box size="0.001 0.001 0.001"/>
-            </geometry>
-        </visual>
-    </link>
-
-    <joint name="king" type="fixed">
-        <parent link="king"/>
-        <child link="base"/>
-        <origin xyz="0 0 0"/>
-    </joint>
-
 <!--  back base  -->
     <link name="base">
         <visual>

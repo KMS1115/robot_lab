@@ -42,9 +42,14 @@ class MonsterRoughEnvCfg(UnitreeGo2WRoughEnvCfg):
         self.scene.robot = MONSTER_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
         self.scene.height_scanner.prim_path = "{ENV_REGEX_NS}/Robot/" + self.base_link_name
         self.scene.height_scanner_base.prim_path = "{ENV_REGEX_NS}/Robot/" + self.base_link_name
+        self.actions.joint_pos.scale = {".*hip_roll_joint_.*": 0.125, "^(?!.*hip_roll_joint_.*).*": 0.25}
 
         self.rewards.joint_mirror.params["mirror_joints"] = [
-            ["(hip_roll|hip_pitch|knee_pitch)_joint_FR", "(hip_roll|hip_pitch|knee_pitch)_HL"],
-            ["(hip_roll|hip_pitch|knee_pitch)_joint_FL", "(hip_roll|hip_pitch|knee_pitch)_HR"],
+            ["(hip_roll|hip_pitch|knee_pitch)_joint_FR", "(hip_roll|hip_pitch|knee_pitch)_joint_HL"],
+            ["(hip_roll|hip_pitch|knee_pitch)_joint_FL", "(hip_roll|hip_pitch|knee_pitch)_joint_HR"],
+        ]
+        self.rewards.action_mirror.params["mirror_joints"] = [
+            ["(hip_roll|hip_pitch|knee_pitch)_joint_FR", "(hip_roll|hip_pitch|knee_pitch)_joint_HL"],
+            ["(hip_roll|hip_pitch|knee_pitch)_joint_FL", "(hip_roll|hip_pitch|knee_pitch)_joint_HR"],
         ]
         self.rewards.feet_gait.params["synced_feet_pair_names"] = (("wheel_FL", "wheel_HR"), ("wheel_FR", "wheel_HL"))

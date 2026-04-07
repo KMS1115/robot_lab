@@ -34,8 +34,10 @@ MONSTER_CFG = ArticulationCfg(
         pos=(0.0, 0.0, 0.45),
         joint_pos={
             ".*hip_roll_joint_.*": 0.0,
-            ".*hip_pitch_joint_.*": 0.8,
-            ".*knee_pitch_joint_.*": -1.5,
+            ".*hip_pitch_joint_F.*": 0.8,
+            ".*knee_pitch_joint_F.*": -1.5,
+            ".*hip_pitch_joint_H.*": -0.8,
+            ".*knee_pitch_joint_H.*": 1.5,
             ".*wheel_joint_.*": 0.0,
         },
         joint_vel={".*": 0.0},
@@ -54,8 +56,8 @@ MONSTER_CFG = ArticulationCfg(
                 ".*hip_pitch_joint_.*": 20.0,
                 ".*knee_pitch_joint_.*": 20.0,
             },
-            stiffness=25.0,
-            damping=0.5,
+            stiffness=80.0,
+            damping=4.0,
             friction=0.0,
         ),
         "wheels": ImplicitActuatorCfg(
