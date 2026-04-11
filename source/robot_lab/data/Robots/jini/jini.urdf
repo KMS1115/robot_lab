@@ -7,7 +7,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Lower-Body-Base.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Lower_Body_Base.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="base_grey">
         <color rgba="0.2 0.2 0.2 1"/>
@@ -19,18 +19,18 @@
       <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
     </inertial>
   </link>
-  <joint name="Left-Hip-Yaw" type="revolute">
+  <joint name="Left_Hip_Yaw" type="revolute">
     <parent link="base_link"/>
-    <child link="JiNi-Left-Link-1"/>
+    <child link="JiNi_Left_Link_1"/>
     <origin xyz="0 0.06 -0.0295" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 0 1"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Left-Link-1">
+  <link name="JiNi_Left_Link_1">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Left-Link-1.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Left_Link_1.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_0">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -42,18 +42,18 @@
       <inertia ixx="1.9683327" ixy="0.010906" ixz="0.20917212" iyy="1.59952947" iyz="-0.006023140000000001" izz="1.0602303"/>
     </inertial>
   </link>
-  <joint name="Left-Hip-Roll" type="revolute">
-    <parent link="JiNi-Left-Link-1"/>
-    <child link="JiNi-Left-Link-2"/>
+  <joint name="Left_Hip_Roll" type="revolute">
+    <parent link="JiNi_Left_Link_1"/>
+    <child link="JiNi_Left_Link_2"/>
     <origin xyz="-0.0105 0 -0.0815" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="1 0 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Left-Link-2">
+  <link name="JiNi_Left_Link_2">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Left-Link-2.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Left_Link_2.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_1">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -65,18 +65,18 @@
       <inertia ixx="0.58946424" ixy="-0.0401541" ixz="-8e-8" iyy="1.06893394" iyz="8e-8" izz="0.74518434"/>
     </inertial>
   </link>
-  <joint name="Left-Hip-Pitch" type="revolute">
-    <parent link="JiNi-Left-Link-2"/>
-    <child link="JiNi-Left-Link-3"/>
+  <joint name="Left_Hip_Pitch" type="revolute">
+    <parent link="JiNi_Left_Link_2"/>
+    <child link="JiNi_Left_Link_3"/>
     <origin xyz="0.0765 0.0015 0" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Left-Link-3">
+  <link name="JiNi_Left_Link_3">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Left-Link-3.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Left_Link_3.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_2">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -88,18 +88,18 @@
       <inertia ixx="13.42892355" ixy="0.14510639" ixz="-0.22114942" iyy="13.306708140000001" iyz="-2.3238817999999997" izz="2.06508474"/>
     </inertial>
   </link>
-  <joint name="Right-Hip-Yaw" type="revolute">
+  <joint name="Right_Hip_Yaw" type="revolute">
     <parent link="base_link"/>
-    <child link="JiNi-Right-Link-1"/>
+    <child link="JiNi_Right_Link_1"/>
     <origin xyz="0 -0.06 -0.0295" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 0 1"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Right-Link-1">
+  <link name="JiNi_Right_Link_1">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Right-Link-1.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Right_Link_1.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_3">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -111,18 +111,18 @@
       <inertia ixx="1.9683327" ixy="0.010906" ixz="0.20917212" iyy="1.59952947" iyz="-0.006023140000000001" izz="1.0602303"/>
     </inertial>
   </link>
-  <joint name="Left-Knee-Pitch" type="revolute">
-    <parent link="JiNi-Left-Link-3"/>
-    <child link="JiNi-Left-Link-4"/>
+  <joint name="Left_Knee_Pitch" type="revolute">
+    <parent link="JiNi_Left_Link_3"/>
+    <child link="JiNi_Left_Link_4"/>
     <origin xyz="0 0.0625 -0.2" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Left-Link-4">
+  <link name="JiNi_Left_Link_4">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Left-Link-4.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Left_Link_4.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_4">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -134,18 +134,18 @@
       <inertia ixx="6.72327713" ixy="-0.011797229999999999" ixz="0.13541776" iyy="7.09569109" iyz="-0.34456019" izz="0.63674768"/>
     </inertial>
   </link>
-  <joint name="Left-Ankle-Pitch" type="revolute">
-    <parent link="JiNi-Left-Link-4"/>
-    <child link="JiNi-Left-Link-5"/>
+  <joint name="Left_Ankle_Pitch" type="revolute">
+    <parent link="JiNi_Left_Link_4"/>
+    <child link="JiNi_Left_Link_5"/>
     <origin xyz="0 0.0485 -0.2" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Left-Link-5">
+  <link name="JiNi_Left_Link_5">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Left-Link-5.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Left_Link_5.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_5">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -181,18 +181,18 @@
       <inertia ixx="0.29734406" ixy="0.0033019499999999997" ixz="-0.056071989999999995" iyy="0.54588271" iyz="-0.00520304" izz="0.508658"/>
     </inertial>
   </link>
-  <joint name="Right-Hip-Roll" type="revolute">
-    <parent link="JiNi-Right-Link-1"/>
-    <child link="JiNi-Right-Link-2"/>
+  <joint name="Right_Hip_Roll" type="revolute">
+    <parent link="JiNi_Right_Link_1"/>
+    <child link="JiNi_Right_Link_2"/>
     <origin xyz="-0.0105 0 -0.0815" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="1 0 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Right-Link-2">
+  <link name="JiNi_Right_Link_2">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Right-Link-2.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Right_Link_2.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_6">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -204,18 +204,18 @@
       <inertia ixx="0.58946424" ixy="-0.0401541" ixz="-8e-8" iyy="1.06893394" iyz="8e-8" izz="0.74518434"/>
     </inertial>
   </link>
-  <joint name="Right-Hip-Pitch" type="revolute">
-    <parent link="JiNi-Right-Link-2"/>
-    <child link="JiNi-Right-Link-3"/>
+  <joint name="Right_Hip_Pitch" type="revolute">
+    <parent link="JiNi_Right_Link_2"/>
+    <child link="JiNi_Right_Link_3"/>
     <origin xyz="0.0765 -0.0015 0" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Right-Link-3">
+  <link name="JiNi_Right_Link_3">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Right-Link-3.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Right_Link_3.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_7">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -227,18 +227,18 @@
       <inertia ixx="13.42892355" ixy="0.14510639" ixz="-0.22114942" iyy="13.306708140000001" iyz="-2.3238817999999997" izz="2.06508474"/>
     </inertial>
   </link>
-  <joint name="Right-Knee-Pitch" type="revolute">
-    <parent link="JiNi-Right-Link-3"/>
-    <child link="JiNi-Right-Link-4"/>
+  <joint name="Right_Knee_Pitch" type="revolute">
+    <parent link="JiNi_Right_Link_3"/>
+    <child link="JiNi_Right_Link_4"/>
     <origin xyz="0 -0.0625 -0.2" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Right-Link-4">
+  <link name="JiNi_Right_Link_4">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Right-Link-4.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Right_Link_4.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_8">
         <color rgba="0.6 0.6 0.6 1"/>
@@ -250,18 +250,18 @@
       <inertia ixx="6.72327713" ixy="-0.011797229999999999" ixz="0.13541776" iyy="7.09569109" iyz="-0.34456019" izz="0.63674768"/>
     </inertial>
   </link>
-  <joint name="Right-Ankle-Pitch" type="revolute">
-    <parent link="JiNi-Right-Link-4"/>
-    <child link="JiNi-Right-Link-5"/>
+  <joint name="Right_Ankle_Pitch" type="revolute">
+    <parent link="JiNi_Right_Link_4"/>
+    <child link="JiNi_Right_Link_5"/>
     <origin xyz="0 -0.0485 -0.2" rpy="0.0000 0.0000 0.0000"/>
     <axis xyz="0 1 0"/>
     <limit lower="-3.1416" upper="3.1416" effort="10" velocity="1"/>
   </joint>
-  <link name="JiNi-Right-Link-5">
+  <link name="JiNi_Right_Link_5">
     <visual>
       <origin xyz="0 0 0" rpy="0.0000 0.0000 0.0000"/>
       <geometry>
-        <mesh filename="meshes/JiNi-Right-Link-5.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes/JiNi_Right_Link_5.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="mat_9">
         <color rgba="0.6 0.6 0.6 1"/>

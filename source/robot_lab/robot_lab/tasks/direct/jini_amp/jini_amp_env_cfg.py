@@ -16,16 +16,16 @@ from robot_lab.assets.jini import JINI_CFG
 MOTIONS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "motions")
 
 JINI_KEY_BODY_NAMES = [
-    "JiNi-Left-Link-1",
-    "JiNi-Left-Link-2",
-    "JiNi-Left-Link-3",
-    "JiNi-Left-Link-4",
-    "JiNi-Left-Link-5",
-    "JiNi-Right-Link-1",
-    "JiNi-Right-Link-2",
-    "JiNi-Right-Link-3",
-    "JiNi-Right-Link-4",
-    "JiNi-Right-Link-5",
+    "JiNi_Left_Link_1",
+    "JiNi_Left_Link_2",
+    "JiNi_Left_Link_3",
+    "JiNi_Left_Link_4",
+    "JiNi_Left_Link_5",
+    "JiNi_Right_Link_1",
+    "JiNi_Right_Link_2",
+    "JiNi_Right_Link_3",
+    "JiNi_Right_Link_4",
+    "JiNi_Right_Link_5",
 ]
 
 

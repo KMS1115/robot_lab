@@ -11,7 +11,7 @@ from robot_lab.tasks.manager_based.locomotion.velocity.velocity_env_cfg import L
 @configclass
 class JiNiRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
     base_link_name = "base_link"
-    foot_link_name = "JiNi-.*-Link-5"
+    foot_link_name = "JiNi_.*_Link_5"
 
     def __post_init__(self):
         super().__post_init__()
@@ -49,12 +49,12 @@ class JiNiRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.rewards.body_lin_acc_l2.params["asset_cfg"].body_names = [self.base_link_name]
 
         self.rewards.joint_torques_l2.weight = -2.0e-7
-        self.rewards.joint_torques_l2.params["asset_cfg"].joint_names = [".*Hip-.*", ".*Knee-Pitch", ".*Ankle-Pitch"]
+        self.rewards.joint_torques_l2.params["asset_cfg"].joint_names = [".*Hip_.*", ".*Knee_Pitch", ".*Ankle_Pitch"]
         self.rewards.joint_vel_l2.weight = 0.0
         self.rewards.joint_acc_l2.weight = -1.25e-7
-        self.rewards.joint_acc_l2.params["asset_cfg"].joint_names = [".*Hip-.*", ".*Knee-Pitch"]
-        self.rewards.create_joint_deviation_l1_rewterm("joint_deviation_hip_yaw_l1", -0.1, [".*Hip-Yaw"])
-        self.rewards.create_joint_deviation_l1_rewterm("joint_deviation_hip_roll_l1", -0.1, [".*Hip-Roll"])
+        self.rewards.joint_acc_l2.params["asset_cfg"].joint_names = [".*Hip_.*", ".*Knee_Pitch"]
+        self.rewards.create_joint_deviation_l1_rewterm("joint_deviation_hip_yaw_l1", -0.1, [".*Hip_Yaw"])
+        self.rewards.create_joint_deviation_l1_rewterm("joint_deviation_hip_roll_l1", -0.1, [".*Hip_Roll"])
         self.rewards.joint_pos_limits.weight = -1.0
         self.rewards.joint_vel_limits.weight = 0.0
         self.rewards.joint_power.weight = 0.0

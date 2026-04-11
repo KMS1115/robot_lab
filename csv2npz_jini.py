@@ -2,6 +2,7 @@
 
 import os
 import argparse
+import xml.etree.ElementTree as ET
 import numpy as np
 
 # ====================================================================
@@ -31,7 +32,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Convert JiNi CSV motion data into AMP NPZ format.")
     parser.add_argument("--csv", default=CSV_FILE, help="Input CSV path.")
     parser.add_argument("--urdf", default=URDF_FILE, help="JiNi URDF path.")
-    parser.add_argument("--mesh-dir", default=MESH_DIR, help="Mesh directory for the URDF.")
+    parser.add_argument("--mesh-dir", default=MESH_DIR, help="Unused compatibility argument.")
     parser.add_argument("--output", default=NPZ_FILE, help="Output NPZ path.")
     parser.add_argument("--fps", type=int, default=FPS, help="Sampling rate of the CSV file.")
     parser.add_argument("--start-idx", type=int, default=START_IDX, help="Optional start frame index (0-based).")
@@ -83,19 +84,139 @@ def compute_angular_velocity(q_prev, q_next, dt, eps=1e-8):
 
 
 # ====================================================================
-# Pinocchio FK
+# URDF FK
 # ====================================================================
 
-def build_pin_robot(urdf_path, mesh_dir):
-    """Load URDF and construct a Pinocchio RobotWrapper with free-flyer."""
-    try:
-        import pinocchio as pin
-    except ImportError as exc:
-        raise ImportError("pinocchio is required to convert JiNi AMP motion data.") from exc
-    robot = pin.RobotWrapper.BuildFromURDF(
-        urdf_path, mesh_dir, pin.JointModelFreeFlyer()
+def parse_vec3(text):
+    return np.fromstring(text, sep=" ", dtype=np.float32)
+
+
+def rpy_to_matrix(rpy):
+    roll, pitch, yaw = rpy
+    cr, sr = np.cos(roll), np.sin(roll)
+    cp, sp = np.cos(pitch), np.sin(pitch)
+    cy, sy = np.cos(yaw), np.sin(yaw)
+    rx = np.array([[1.0, 0.0, 0.0], [0.0, cr, -sr], [0.0, sr, cr]], dtype=np.float32)
+    ry = np.array([[cp, 0.0, sp], [0.0, 1.0, 0.0], [-sp, 0.0, cp]], dtype=np.float32)
+    rz = np.array([[cy, -sy, 0.0], [sy, cy, 0.0], [0.0, 0.0, 1.0]], dtype=np.float32)
+    return rz @ ry @ rx
+
+
+def axis_angle_to_matrix(axis, angle):
+    axis = np.asarray(axis, dtype=np.float32)
+    norm = np.linalg.norm(axis)
+    if norm < 1e-8:
+        return np.eye(3, dtype=np.float32)
+    x, y, z = axis / norm
+    c = np.cos(angle)
+    s = np.sin(angle)
+    C = 1.0 - c
+    return np.array(
+        [
+            [c + x * x * C, x * y * C - z * s, x * z * C + y * s],
+            [y * x * C + z * s, c + y * y * C, y * z * C - x * s],
+            [z * x * C - y * s, z * y * C + x * s, c + z * z * C],
+        ],
+        dtype=np.float32,
     )
-    return robot
+
+
+def quat_xyzw_to_matrix(q):
+    x, y, z, w = q
+    n = x * x + y * y + z * z + w * w
+    if n < 1e-8:
+        return np.eye(3, dtype=np.float32)
+    s = 2.0 / n
+    xx, yy, zz = x * x * s, y * y * s, z * z * s
+    xy, xz, yz = x * y * s, x * z * s, y * z * s
+    wx, wy, wz = w * x * s, w * y * s, w * z * s
+    return np.array(
+        [
+            [1.0 - (yy + zz), xy - wz, xz + wy],
+            [xy + wz, 1.0 - (xx + zz), yz - wx],
+            [xz - wy, yz + wx, 1.0 - (xx + yy)],
+        ],
+        dtype=np.float32,
+    )
+
+
+def matrix_to_quat_wxyz(R):
+    trace = np.trace(R)
+    if trace > 0.0:
+        s = 2.0 * np.sqrt(trace + 1.0)
+        w = 0.25 * s
+        x = (R[2, 1] - R[1, 2]) / s
+        y = (R[0, 2] - R[2, 0]) / s
+        z = (R[1, 0] - R[0, 1]) / s
+    elif R[0, 0] > R[1, 1] and R[0, 0] > R[2, 2]:
+        s = 2.0 * np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2])
+        w = (R[2, 1] - R[1, 2]) / s
+        x = 0.25 * s
+        y = (R[0, 1] + R[1, 0]) / s
+        z = (R[0, 2] + R[2, 0]) / s
+    elif R[1, 1] > R[2, 2]:
+        s = 2.0 * np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2])
+        w = (R[0, 2] - R[2, 0]) / s
+        x = (R[0, 1] + R[1, 0]) / s
+        y = 0.25 * s
+        z = (R[1, 2] + R[2, 1]) / s
+    else:
+        s = 2.0 * np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1])
+        w = (R[1, 0] - R[0, 1]) / s
+        x = (R[0, 2] + R[2, 0]) / s
+        y = (R[1, 2] + R[2, 1]) / s
+        z = 0.25 * s
+    quat = np.array([w, x, y, z], dtype=np.float32)
+    quat /= max(np.linalg.norm(quat), 1e-8)
+    return quat
+
+
+def load_urdf_kinematic_tree(urdf_path):
+    root = ET.parse(urdf_path).getroot()
+    joints_by_child = {}
+    for joint in root.findall("joint"):
+        origin = joint.find("origin")
+        axis = joint.find("axis")
+        parent = joint.find("parent").attrib["link"]
+        child = joint.find("child").attrib["link"]
+        joints_by_child[child] = {
+            "name": joint.attrib["name"],
+            "parent": parent,
+            "child": child,
+            "origin_xyz": parse_vec3(origin.attrib.get("xyz", "0 0 0")),
+            "origin_rpy": parse_vec3(origin.attrib.get("rpy", "0 0 0")),
+            "axis": parse_vec3(axis.attrib.get("xyz", "0 0 1")) if axis is not None else np.array([0, 0, 1], dtype=np.float32),
+        }
+    return joints_by_child
+
+
+def compute_link_transforms(root_pos, root_quat_xyzw, joint_positions, body_names, joints_by_child, joint_name_to_idx):
+    transforms = {
+        "base_link": {
+            "R": quat_xyzw_to_matrix(root_quat_xyzw),
+            "p": np.asarray(root_pos, dtype=np.float32),
+        }
+    }
+
+    def get_transform(link_name):
+        if link_name in transforms:
+            return transforms[link_name]
+        joint = joints_by_child[link_name]
+        parent_tf = get_transform(joint["parent"])
+        R_origin = rpy_to_matrix(joint["origin_rpy"])
+        R_joint = axis_angle_to_matrix(joint["axis"], joint_positions[joint_name_to_idx[joint["name"]]])
+        R_child = parent_tf["R"] @ R_origin @ R_joint
+        p_child = parent_tf["p"] + parent_tf["R"] @ joint["origin_xyz"]
+        transforms[link_name] = {"R": R_child, "p": p_child.astype(np.float32)}
+        return transforms[link_name]
+
+    body_positions = np.zeros((len(body_names), 3), dtype=np.float32)
+    body_rotations = np.zeros((len(body_names), 4), dtype=np.float32)
+    for i, body_name in enumerate(body_names):
+        tf = get_transform(body_name)
+        body_positions[i] = tf["p"]
+        body_rotations[i] = matrix_to_quat_wxyz(tf["R"])
+    return body_positions, body_rotations
 
 
 # ====================================================================
@@ -109,18 +230,11 @@ def main():
         raise FileNotFoundError(f"CSV file not found: {args.csv}")
     if not os.path.isfile(args.urdf):
         raise FileNotFoundError(f"URDF file not found: {args.urdf}")
-    if not os.path.isdir(args.mesh_dir):
-        raise FileNotFoundError(f"Mesh directory not found: {args.mesh_dir}")
 
     try:
         import pandas as pd
     except ImportError as exc:
         raise ImportError("pandas is required to run csv2npz_jini.py.") from exc
-
-    try:
-        import pinocchio as pin
-    except ImportError as exc:
-        raise ImportError("pinocchio is required to run csv2npz_jini.py.") from exc
 
     # 1. Read CSV data
     df = pd.read_csv(args.csv, header=None)
@@ -142,16 +256,16 @@ def main():
 
     # 2. Joint names (URDF joint order)
     joint_names = [
-        "Left-Hip-Yaw",
-        "Left-Hip-Roll",
-        "Left-Hip-Pitch",
-        "Left-Knee-Pitch",
-        "Left-Ankle-Pitch",
-        "Right-Hip-Yaw",
-        "Right-Hip-Roll",
-        "Right-Hip-Pitch",
-        "Right-Knee-Pitch",
-        "Right-Ankle-Pitch",
+        "Left_Hip_Yaw",
+        "Left_Hip_Roll",
+        "Left_Hip_Pitch",
+        "Left_Knee_Pitch",
+        "Left_Ankle_Pitch",
+        "Right_Hip_Yaw",
+        "Right_Hip_Roll",
+        "Right_Hip_Pitch",
+        "Right_Knee_Pitch",
+        "Right_Ankle_Pitch",
     ]
     dof_names = np.array(joint_names, dtype=np.str_)
 
@@ -167,16 +281,16 @@ def main():
     # 5. Body link names for AMP observations
     body_names = [
         "base_link",
-        "JiNi-Left-Link-1",
-        "JiNi-Left-Link-2",
-        "JiNi-Left-Link-3",
-        "JiNi-Left-Link-4",
-        "JiNi-Left-Link-5",
-        "JiNi-Right-Link-1",
-        "JiNi-Right-Link-2",
-        "JiNi-Right-Link-3",
-        "JiNi-Right-Link-4",
-        "JiNi-Right-Link-5",
+        "JiNi_Left_Link_1",
+        "JiNi_Left_Link_2",
+        "JiNi_Left_Link_3",
+        "JiNi_Left_Link_4",
+        "JiNi_Left_Link_5",
+        "JiNi_Right_Link_1",
+        "JiNi_Right_Link_2",
+        "JiNi_Right_Link_3",
+        "JiNi_Right_Link_4",
+        "JiNi_Right_Link_5",
     ]
     body_names = np.array(body_names, dtype=np.str_)
     B = len(body_names)
@@ -184,37 +298,19 @@ def main():
     body_positions = np.zeros((N, B, 3), dtype=np.float32)
     body_rotations = np.zeros((N, B, 4), dtype=np.float32)
 
-    # 6. Pinocchio forward kinematics
-    robot = build_pin_robot(args.urdf, args.mesh_dir)
-    model = robot.model
-    data_pk = robot.data
-    nq = model.nq
-
-    print(f"  Pinocchio nq={nq}, CSV root(7) + joints({joint_data.shape[1]}) = {7 + joint_data.shape[1]}")
-
-    q_pin = pin.neutral(model)
+    # 6. URDF forward kinematics
+    joints_by_child = load_urdf_kinematic_tree(args.urdf)
+    joint_name_to_idx = {name: i for i, name in enumerate(joint_names)}
 
     for i in range(N):
-        # Set root pose
-        q_pin[0:3] = root_data[i, 0:3]       # position (x, y, z)
-        q_pin[3:7] = root_data[i, 3:7]       # quaternion (qx, qy, qz, qw)
-        # Set joint angles
-        dofD = joint_data.shape[1]
-        q_pin[7:7 + dofD] = joint_data[i, :]
-
-        pin.forwardKinematics(model, data_pk, q_pin)
-        pin.updateFramePlacements(model, data_pk)
-
-        for j, link_name in enumerate(body_names):
-            fid = model.getFrameId(link_name)
-            link_tf = data_pk.oMf[fid]
-            body_positions[i, j, :] = link_tf.translation
-            quat_xyzw = pin.Quaternion(link_tf.rotation)
-            # Store as (w, x, y, z)
-            body_rotations[i, j, :] = np.array(
-                [quat_xyzw.w, quat_xyzw.x, quat_xyzw.y, quat_xyzw.z],
-                dtype=np.float32,
-            )
+        body_positions[i], body_rotations[i] = compute_link_transforms(
+            root_pos=root_data[i, 0:3],
+            root_quat_xyzw=root_data[i, 3:7],
+            joint_positions=joint_data[i],
+            body_names=body_names.tolist(),
+            joints_by_child=joints_by_child,
+            joint_name_to_idx=joint_name_to_idx,
+        )
 
     # 7. Body linear velocities (central difference)
     body_linear_velocities = np.zeros_like(body_positions)

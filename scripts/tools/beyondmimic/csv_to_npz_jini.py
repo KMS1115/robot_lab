@@ -7,8 +7,8 @@ Expected CSV column order:
 1. base position xyz
 2. base quaternion xyzw
 3. JiNi joint positions in this order:
-   Left-Hip-Yaw, Left-Hip-Roll, Left-Hip-Pitch, Left-Knee-Pitch, Left-Ankle-Pitch,
-   Right-Hip-Yaw, Right-Hip-Roll, Right-Hip-Pitch, Right-Knee-Pitch, Right-Ankle-Pitch
+   Left_Hip_Yaw, Left_Hip_Roll, Left_Hip_Pitch, Left_Knee_Pitch, Left_Ankle_Pitch,
+   Right_Hip_Yaw, Right_Hip_Roll, Right_Hip_Pitch, Right_Knee_Pitch, Right_Ankle_Pitch
 """
 
 import argparse
@@ -195,16 +195,16 @@ def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
 
     robot = scene["robot"]
     joint_sdk_names = [
-        "Left-Hip-Yaw",
-        "Left-Hip-Roll",
-        "Left-Hip-Pitch",
-        "Left-Knee-Pitch",
-        "Left-Ankle-Pitch",
-        "Right-Hip-Yaw",
-        "Right-Hip-Roll",
-        "Right-Hip-Pitch",
-        "Right-Knee-Pitch",
-        "Right-Ankle-Pitch",
+        "Left_Hip_Yaw",
+        "Left_Hip_Roll",
+        "Left_Hip_Pitch",
+        "Left_Knee_Pitch",
+        "Left_Ankle_Pitch",
+        "Right_Hip_Yaw",
+        "Right_Hip_Roll",
+        "Right_Hip_Pitch",
+        "Right_Knee_Pitch",
+        "Right_Ankle_Pitch",
     ]
     robot_joint_indexes = robot.find_joints(joint_sdk_names, preserve_order=True)[0]
 

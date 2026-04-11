@@ -22,16 +22,16 @@ class JiNiBeyondMimicFlatEnvCfg(BeyondMimicEnvCfg):
         self.commands.motion.anchor_body_name = "base_link"
         self.commands.motion.body_names = [
             "base_link",
-            "JiNi-Left-Link-1",
-            "JiNi-Left-Link-2",
-            "JiNi-Left-Link-3",
-            "JiNi-Left-Link-4",
-            "JiNi-Left-Link-5",
-            "JiNi-Right-Link-1",
-            "JiNi-Right-Link-2",
-            "JiNi-Right-Link-3",
-            "JiNi-Right-Link-4",
-            "JiNi-Right-Link-5",
+            "JiNi_Left_Link_1",
+            "JiNi_Left_Link_2",
+            "JiNi_Left_Link_3",
+            "JiNi_Left_Link_4",
+            "JiNi_Left_Link_5",
+            "JiNi_Right_Link_1",
+            "JiNi_Right_Link_2",
+            "JiNi_Right_Link_3",
+            "JiNi_Right_Link_4",
+            "JiNi_Right_Link_5",
         ]
 
         self.observations.policy.motion_anchor_pos_b = None
@@ -41,12 +41,12 @@ class JiNiBeyondMimicFlatEnvCfg(BeyondMimicEnvCfg):
 
         self.rewards.undesired_contacts.params["sensor_cfg"] = SceneEntityCfg(
             "contact_forces",
-            body_names=[r"^(?!JiNi-Left-Link-5$)(?!JiNi-Right-Link-5$).+$"],
+            body_names=[r"^(?!JiNi_Left_Link_5$)(?!JiNi_Right_Link_5$).+$"],
         )
 
         self.terminations.ee_body_pos.params["body_names"] = [
-            "JiNi-Left-Link-5",
-            "JiNi-Right-Link-5",
+            "JiNi_Left_Link_5",
+            "JiNi_Right_Link_5",
         ]
 
         self.episode_length_s = 30.0
