@@ -14,6 +14,8 @@ from isaaclab.utils import configclass
 from robot_lab.assets.jini import JINI_CFG
 
 MOTIONS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "motions")
+MOONWALK_MOTION_FILE = os.path.join(MOTIONS_DIR, "jini_moonwalk_30hz.npz")
+STAND_WITH_ONE_FOOT_MOTION_FILE = os.path.join(MOTIONS_DIR, "jini_stand_with_one_foot_30hz.npz")
 
 JINI_KEY_BODY_NAMES = [
     "JiNi_Left_Link_1",
@@ -64,11 +66,16 @@ class JiNiAmpMoonwalkEnvCfg(DirectRLEnvCfg):
     early_termination = True
     termination_height = 0.32
 
-    motion_file = os.path.join(MOTIONS_DIR, "jini_moonwalk_30hz.npz")
+    motion_file = MOONWALK_MOTION_FILE
     reference_body = "base_link"
     key_body_names = JINI_KEY_BODY_NAMES
     reset_strategy = "random-start"  # default, random, random-start
     """Strategy to be followed when resetting each environment (humanoid pose and joint states)."""
+
+    # ground material
+    ground_static_friction = 1.0
+    ground_dynamic_friction = 1.0
+    ground_restitution = 0.0
 
     # simulation
     sim: SimulationCfg = SimulationCfg(
@@ -85,3 +92,10 @@ class JiNiAmpMoonwalkEnvCfg(DirectRLEnvCfg):
 
     # robot
     robot: ArticulationCfg = JINI_CFG.replace(prim_path="/World/envs/env_.*/Robot")
+
+
+@configclass
+class JiNiAmpStandWithOneFootEnvCfg(JiNiAmpMoonwalkEnvCfg):
+    """JiNi AMP config for stand-with-one-foot reference motion."""
+
+    motion_file = STAND_WITH_ONE_FOOT_MOTION_FILE

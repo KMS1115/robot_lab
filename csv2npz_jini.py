@@ -2,6 +2,7 @@
 
 import os
 import argparse
+import csv
 import xml.etree.ElementTree as ET
 import numpy as np
 
@@ -219,6 +220,20 @@ def compute_link_transforms(root_pos, root_quat_xyzw, joint_positions, body_name
     return body_positions, body_rotations
 
 
+def load_csv_array(csv_path: str, start_idx: int | None = None, end_idx: int | None = None) -> np.ndarray:
+    """Load a numeric CSV into a float32 array without requiring pandas."""
+    with open(csv_path, newline="") as file:
+        rows = [row for row in csv.reader(file) if row]
+
+    if start_idx is not None or end_idx is not None:
+        rows = rows[start_idx:end_idx]
+
+    if not rows:
+        raise ValueError(f"CSV file has no rows after slicing: {csv_path}")
+
+    return np.asarray(rows, dtype=np.float32)
+
+
 # ====================================================================
 # Main
 # ====================================================================
@@ -231,18 +246,8 @@ def main():
     if not os.path.isfile(args.urdf):
         raise FileNotFoundError(f"URDF file not found: {args.urdf}")
 
-    try:
-        import pandas as pd
-    except ImportError as exc:
-        raise ImportError("pandas is required to run csv2npz_jini.py.") from exc
-
     # 1. Read CSV data
-    df = pd.read_csv(args.csv, header=None)
-
-    if args.start_idx is not None or args.end_idx is not None:
-        data_orig = df.iloc[args.start_idx:args.end_idx].to_numpy(dtype=np.float32)
-    else:
-        data_orig = df.to_numpy(dtype=np.float32)
+    data_orig = load_csv_array(args.csv, start_idx=args.start_idx, end_idx=args.end_idx)
 
     N = data_orig.shape[0]
     print(f"Loading CSV: {args.csv}")

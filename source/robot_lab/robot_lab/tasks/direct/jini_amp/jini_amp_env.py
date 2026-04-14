@@ -49,9 +49,9 @@ class JiNiAmpEnv(DirectRLEnv):
             prim_path="/World/ground",
             cfg=GroundPlaneCfg(
                 physics_material=sim_utils.RigidBodyMaterialCfg(
-                    static_friction=1.0,
-                    dynamic_friction=1.0,
-                    restitution=0.0,
+                    static_friction=self.cfg.ground_static_friction,
+                    dynamic_friction=self.cfg.ground_dynamic_friction,
+                    restitution=self.cfg.ground_restitution,
                 ),
             ),
         )

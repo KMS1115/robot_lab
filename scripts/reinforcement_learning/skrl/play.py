@@ -60,6 +60,24 @@ parser.add_argument(
     help="The RL algorithm used for training the skrl agent.",
 )
 parser.add_argument("--real-time", action="store_true", default=False, help="Run in real-time, if possible.")
+parser.add_argument(
+    "--ground-static-friction",
+    type=float,
+    default=None,
+    help="Override ground static friction for tasks that expose a configurable ground material.",
+)
+parser.add_argument(
+    "--ground-dynamic-friction",
+    type=float,
+    default=None,
+    help="Override ground dynamic friction for tasks that expose a configurable ground material.",
+)
+parser.add_argument(
+    "--ground-restitution",
+    type=float,
+    default=None,
+    help="Override ground restitution for tasks that expose a configurable ground material.",
+)
 
 # append AppLauncher cli args
 AppLauncher.add_app_launcher_args(parser)
@@ -139,6 +157,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, expe
     # override configurations with non-hydra CLI arguments
     env_cfg.scene.num_envs = args_cli.num_envs if args_cli.num_envs is not None else env_cfg.scene.num_envs
     env_cfg.sim.device = args_cli.device if args_cli.device is not None else env_cfg.sim.device
+    if args_cli.ground_static_friction is not None and hasattr(env_cfg, "ground_static_friction"):
+        env_cfg.ground_static_friction = args_cli.ground_static_friction
+    if args_cli.ground_dynamic_friction is not None and hasattr(env_cfg, "ground_dynamic_friction"):
+        env_cfg.ground_dynamic_friction = args_cli.ground_dynamic_friction
+    if args_cli.ground_restitution is not None and hasattr(env_cfg, "ground_restitution"):
+        env_cfg.ground_restitution = args_cli.ground_restitution
 
     # configure the ML framework into the global skrl variable
     if args_cli.ml_framework.startswith("jax"):
